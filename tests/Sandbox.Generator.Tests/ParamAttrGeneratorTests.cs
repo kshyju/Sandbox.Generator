@@ -10,14 +10,22 @@ namespace Sandbox.Generator.Tests
         {
             string code = @"
 using System;
+namespace Sandbox
+{
 public class BarClass
 {
-    public void FooMethod()
+    public void FooMethod([MyTriggerBinding] string triggerData, int age)
+    {
+    }
+    private void AnotherMethod()
     {
     }
 }
 [ConverterInfoAttribute(typeof(MyConverter))]
-public class MyBinding
+public class MyTriggerBinding : MyBindingBase
+{
+}
+public class MyBindingBase : Attribute
 {
 }
 public class ConverterInfoAttribute : Attribute
@@ -34,13 +42,21 @@ public class MyConverter
 {
     public string Convert() => ""From MyConvert"";
 }
+}
 ".Replace("'", "\"\"");
 
         string generatedFileName = "ParamAttr.g.cs";
-        string expectedOutput = @"// Auto-generated code
+        string expectedOutput = $@"// Auto-generated code
+using System.Collections.Generic;
 public class FooClass2
-{
-}
+{{
+    public IDictionary<string, string> GetConverterMapping()
+    {{
+        var dict = new Dictionary<string, string>();
+        dict.Add('FooMethod.triggerData', 'Sandbox.MyConverter');
+        return dict;
+    }}
+}}
 ".Replace("'", "\"");
 
             await TestHelpers.RunTestAsync<ParameterAttrGenerator>(
