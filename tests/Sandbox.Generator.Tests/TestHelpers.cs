@@ -1,6 +1,10 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Core;
+using Microsoft.Azure.Functions.Worker.Http;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Testing;
 using Microsoft.CodeAnalysis.Text;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,10 +34,13 @@ namespace Sandbox.Generator.Tests
                     AdditionalReferences =
                     {
                         // Durable Task SDK
-                        ///typeof(TaskActivityContext).Assembly,
+                        typeof(HttpRequestData).Assembly
                     },
                 },
             };
+            test.TestState.AdditionalReferences.Add(typeof(ILogger).Assembly);
+            test.TestState.AdditionalReferences.Add(typeof(FunctionAttribute).Assembly);
+            test.TestState.AdditionalReferences.Add(typeof(HttpTriggerAttribute).Assembly);
 
             return test.RunAsync();
         }
