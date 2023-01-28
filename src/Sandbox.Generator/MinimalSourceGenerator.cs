@@ -22,28 +22,11 @@ namespace Sandbox.Generator
             Parser p = new Parser(context);
             var funcClasses = p.GetStuff(receiver.CandidateMethods);
 
+            var sourceText = new Emitter().Create(funcClasses);
             foreach(var cls in funcClasses)
             {
 
             }
-
-            SourceText sourceText;
-            using (var stringWriter = new StringWriter())
-            using (var indentedTextWriter = new IndentedTextWriter(stringWriter))
-            {
-                indentedTextWriter.WriteLine("// Auto-generated code");
-                indentedTextWriter.WriteLine("using System;");
-                indentedTextWriter.WriteLine("public class FooClass");
-                indentedTextWriter.WriteLine("{");
-                indentedTextWriter.WriteLine("}");
-
-                indentedTextWriter.Flush();
-                sourceText = SourceText.From(stringWriter.ToString(), encoding: Encoding.UTF8, checksumAlgorithm: SourceHashAlgorithm.Sha256);
-            }
-
-
-
-
             context.AddSource($"MyGeneratedFile.g.cs", sourceText);
         }
 

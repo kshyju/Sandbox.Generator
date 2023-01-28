@@ -15,9 +15,13 @@ using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace FunctionApp17
+namespace MyCompany
 {
-    public class Function1
+namespace MyProduct
+{
+    public class MyPClass
+{
+    public class MyHttpTriggers
     {
         private readonly ILogger _logger;
         private IConfiguration? _configuration;
@@ -26,16 +30,9 @@ namespace FunctionApp17
             _logger = loggerFactory.CreateLogger<Function1>();
         }
 
-        public Function1(ILoggerFactory loggerFactory, IConfiguration configuration)
+        [Function(""FunctionA"")]
+        public HttpResponseData Run1([HttpTrigger(AuthorizationLevel.Anonymous, ""get"", ""post"")] HttpRequestData req)
         {
-            _logger = loggerFactory.CreateLogger<Function1>();
-            _configuration = configuration;
-        }
-
-        [Function(""Function1"")]
-        public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Anonymous, ""get"", ""post"")] HttpRequestData req)
-        {
-            _logger.LogInformation(""C# "" + _configuration[""A""]);
             var response = req.CreateResponse(HttpStatusCode.OK);
             return response;
         }
@@ -48,7 +45,8 @@ namespace FunctionApp17
         }
     }
 }
-
+}
+}
 ";
 
         var generatedFileName = "MyGeneratedFile.g.cs";

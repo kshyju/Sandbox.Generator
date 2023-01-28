@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Sandbox.Generator;
 
-internal class ClassInfo
+public class ClassInfo
 {
     public ClassInfo(string className)
     {
@@ -15,17 +15,20 @@ internal class ClassInfo
 
     public string ClassName { get; }
 
-    public FuncInfo[]? Functions { set; get; }
 }
-internal class FuncInfo
+public class FuncInfo
 {
     public FuncInfo(string functionName)
     {
         FunctionName = functionName;
     }
+    
+    public string MethodName { get; set; }
 
     public bool IsStatic { get; set; }
     public string FunctionName { get; }
+    
+    public ClassInfo ParentClass { set; get; }
 
     public IEnumerable<string> ParameterTypeNames { set; get; } = Enumerable.Empty<string>();
 }

@@ -22,10 +22,11 @@ namespace Sandbox.Generator
             _context = context;
         }
 
-        public IEnumerable<ClassInfo> GetStuff(List<MethodDeclarationSyntax> methods)
+        public IEnumerable<FuncInfo> GetStuff(List<MethodDeclarationSyntax> methods)
         {
-            
-            var result = new List<ClassInfo>();
+            Dictionary<string, ClassInfo> classDict = new Dictionary<string, ClassInfo>();
+
+            var functionList = new List<FuncInfo>();
             foreach (MethodDeclarationSyntax method in methods)
             {
                 CancellationToken.ThrowIfCancellationRequested();
@@ -37,6 +38,8 @@ namespace Sandbox.Generator
                     continue;
                 }
 
+                var methodName = method.Identifier.Text;
+
                 var methodParameterList = new List<string>(method.ParameterList.Parameters.Count);
 
                 foreach (var methodParam in method.ParameterList.Parameters)
@@ -46,21 +49,33 @@ namespace Sandbox.Generator
                     methodParameterList.Add(parameterSymbol.Type.Name);
                 }
 
-                var funcInfo = new FuncInfo(functionName!)
-                {
-                    ParameterTypeNames = methodParameterList
-                };
+                var methodSymSemanticModel = Compilation.GetSemanticModel(method.SyntaxTree);
+                var methodSymbol = methodSymSemanticModel.GetDeclaredSymbol(method);
+                var fullyQualifiedClassName = methodSymbol.ContainingSymbol.ToDisplayString();
 
                 ClassDeclarationSyntax functionClass = (ClassDeclarationSyntax)method.Parent!;
-                var className = functionClass.Identifier.Text;
-                ClassInfo classInfo = new ClassInfo(className);
-                result.Add(classInfo);
+                var entryPoint = $"{fullyQualifiedClassName}.{methodName}";
 
-                var constructorParams = GetConstructorParamTypeNames(functionClass, model);
-                classInfo.ConstructorArgumentTypeNames = constructorParams;
+                if (!classDict.TryGetValue(entryPoint, out var classInfo))
+                {
+                    classInfo = new ClassInfo(fullyQualifiedClassName)
+                    {
+                        ConstructorArgumentTypeNames = GetConstructorParamTypeNames(functionClass, model)
+                    };
+                    classDict[entryPoint] = classInfo;
+                }
+
+                var funcInfo = new FuncInfo(entryPoint!)
+                {
+                    ParameterTypeNames = methodParameterList,
+                    MethodName = methodName
+                };
+                funcInfo.ParentClass = classInfo;
+
+                functionList.Add(funcInfo);
             }
 
-            return result;
+            return functionList;
         }
 
         private static IEnumerable<string> GetConstructorParamTypeNames(ClassDeclarationSyntax functionClass,
