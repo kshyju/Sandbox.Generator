@@ -50,10 +50,28 @@ namespace MyProduct
 ";
 
         var generatedFileName = "MyGeneratedFile.g.cs";
-        var expectedOutput = @"// Auto-generated code
-using System;
-public class FooClass
+        var expectedOutput = @"
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Context.Features;
+using Microsoft.Azure.Functions.Worker.Core.FunctionMetadata;
+using Microsoft.Azure.Functions.Worker.Http;
+using Microsoft.Azure.Functions.Worker.Invocation;
+namespace FunctionApp26
 {
+    internal class DirectFunctionExecutor : IFunctionExecutor
+    {
+        public async Task ExecuteAsync(FunctionContext context)
+        {
+            if (string.Equals(context.FunctionDefinition.Name, ""MyCompany.MyProduct.MyPClass.MyHttpTriggers.Run1"",StringComparison.OrdinalIgnoreCase))
+            {
+                var p1 = context.InstanceServices.GetService<ILoggerFactory>();
+                var modelBindingFeature = context.Features.Get<IModelBindingFeature>()!;
+                var inputArguments = await modelBindingFeature.BindFunctionInputAsync(context);
+                var t = new MyCompany.MyProduct.MyPClass.MyHttpTriggers(p1);
+                context.GetInvocationResult().Value = t.Run1((HttpRequestData)inputArguments[1]);
+            }
+        }
+    }
 }
 ".Replace("'", "\"");
 

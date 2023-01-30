@@ -18,7 +18,6 @@ namespace Sandbox.Generator
                 return;
             }
 
-
             Parser p = new Parser(context);
             var funcClasses = p.GetStuff(receiver.CandidateMethods);
 
