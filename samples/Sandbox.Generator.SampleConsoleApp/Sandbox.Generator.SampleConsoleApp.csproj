@@ -5,10 +5,11 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <FunctionsEnablePlaceholder>12</FunctionsEnablePlaceholder>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Sandbox.Generator\Sandbox.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <PackageReference Include="Sandbox.Generator" Version="1.0.1" />
   </ItemGroup>
 
 </Project>

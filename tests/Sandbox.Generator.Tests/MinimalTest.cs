@@ -16,10 +16,7 @@ public class BarClass
 
         var generatedFileName = "MyGeneratedFile.g.cs";
         var expectedOutput = @"// Auto-generated code
-using System;
-public class FooClass
-{
-}
+// TryGetValue=True, enablePlaceHolder:True
 ".Replace("'", "\"");
 
             await TestHelpers.RunTestAsync<MinimalSourceGenerator>(

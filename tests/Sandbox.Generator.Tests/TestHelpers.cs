@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Testing;
+using Microsoft.CodeAnalysis.Testing;
 using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,8 @@ namespace Sandbox.Generator.Tests
                     },
                 },
             };
+            string config = $"is_global = true{Environment.NewLine}build_property.FunctionsEnablePlaceholder = {true}";
+            test.TestState.AnalyzerConfigFiles.Add(("/.globalconfig", config));
 
             return test.RunAsync();
         }

@@ -11,15 +11,23 @@ namespace Sandbox.Generator
     {
         public void Execute(GeneratorExecutionContext context)
         {
+            string txt = "// ";
+            if(context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.FunctionsEnablePlaceholder", 
+                out var enablePlaceHolder))
+            {
+                txt += $"TryGetValue=True, enablePlaceHolder:{enablePlaceHolder}";
+            }
+            else
+            {
+                txt += "TryGetValue=false";
+            }
+
             SourceText sourceText;
             using (var stringWriter = new StringWriter())
             using (var indentedTextWriter = new IndentedTextWriter(stringWriter))
             {
                 indentedTextWriter.WriteLine("// Auto-generated code");
-                indentedTextWriter.WriteLine("using System;");
-                indentedTextWriter.WriteLine("public class FooClass");
-                indentedTextWriter.WriteLine("{");
-                indentedTextWriter.WriteLine("}");
+                indentedTextWriter.WriteLine(txt);
 
                 indentedTextWriter.Flush();
                 sourceText = SourceText.From(stringWriter.ToString(), encoding: Encoding.UTF8, checksumAlgorithm: SourceHashAlgorithm.Sha256);
