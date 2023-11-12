@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 namespace Sandbox.Generator.Tests
 {
     // Mostly copy/pasted from the Microsoft Source Generators testing documentation
+    // https://github.com/dotnet/roslyn/blob/main/docs/features/source-generators.cookbook.md#unit-testing-of-generators
     public static class CSharpSourceGeneratorVerifier<TSourceGenerator> where TSourceGenerator : ISourceGenerator, new()
     {
         public class Test : CSharpSourceGeneratorTest<TSourceGenerator, XUnitVerifier>
