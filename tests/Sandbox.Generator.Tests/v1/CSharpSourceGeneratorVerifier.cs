@@ -4,16 +4,13 @@ using Microsoft.CodeAnalysis.Testing.Verifiers;
 using Microsoft.CodeAnalysis.Testing;
 using Microsoft.CodeAnalysis;
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Sandbox.Generator.Tests
+namespace Sandbox.Generator.Tests.v1
 {
     // Mostly copy/pasted from the Microsoft Source Generators testing documentation
+    // https://github.com/dotnet/roslyn/blob/main/docs/features/source-generators.cookbook.md#unit-testing-of-generators
     public static class CSharpSourceGeneratorVerifier<TSourceGenerator> where TSourceGenerator : ISourceGenerator, new()
     {
         public class Test : CSharpSourceGeneratorTest<TSourceGenerator, XUnitVerifier>
@@ -21,7 +18,7 @@ namespace Sandbox.Generator.Tests
             public Test()
             {
                 // See https://www.nuget.org/packages/Microsoft.NETCore.App.Ref/6.0.0
-                this.ReferenceAssemblies = new ReferenceAssemblies(
+                ReferenceAssemblies = new ReferenceAssemblies(
                     targetFramework: "net6.0",
                     referenceAssemblyPackage: new PackageIdentity("Microsoft.NETCore.App.Ref", "6.0.0"),
                     referenceAssemblyPath: Path.Combine("ref", "net6.0"));
@@ -50,7 +47,7 @@ namespace Sandbox.Generator.Tests
 
             protected override ParseOptions CreateParseOptions()
             {
-                return ((CSharpParseOptions)base.CreateParseOptions()).WithLanguageVersion(this.LanguageVersion);
+                return ((CSharpParseOptions)base.CreateParseOptions()).WithLanguageVersion(LanguageVersion);
             }
         }
     }
